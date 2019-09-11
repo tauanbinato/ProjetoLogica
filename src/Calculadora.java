@@ -17,7 +17,7 @@ public class Calculadora {
 			userProp = rawProp;
 			String rawPropArray[] = rawProp.split(" ");
 
-			System.out.println(Arrays.toString(rawPropArray));
+			//System.out.println(Arrays.toString(rawPropArray));
 			for(int i = 0; i < rawPropArray.length; i++) {
 
 				//Checamos se é um conectivo, se n for será variável.
@@ -69,9 +69,10 @@ public class Calculadora {
 				}
 				i++;
 			}
-			
+			Interface.spacer(userProp.length());
 			valorVerdadeNum = (int) Math.pow(2, onlyDiffVars.size());
-			System.out.println("Número de variáveis: " + onlyDiffVars.size() + "| Numero de conectivos: " + conecArrayList.size() + "| Total valores verdade possíveis: " + valorVerdadeNum + "|");
+			Interface.mostrarInfoProposicao(onlyDiffVars,conecArrayList,valorVerdadeNum);
+			Interface.spacer(userProp.length());
 		} catch (Exception e) {
 			System.out.println("ERRO AO INICIALIZAR VALORES VERDADE -> " + e.getMessage());
 		}

@@ -43,7 +43,6 @@ public class Variavel {
 			}
 		
 		}
-		//Interface.mostrarInfoVariavel(this);
 	}
 	
 	public void setValorVerdadeEqual(ArrayList<String> vvAl) {
