@@ -79,8 +79,7 @@ public class Interface {
 	
 	public static void userPedirProposicao() {
 		System.out.println("Insira a proposição que deseja calcular.");
-		System.out.println("Utilize um espaço entre cada variavel e conectivo.");
-		System.out.println("Ex: p -> q ^ b ");
+		System.out.println("Conectivos: -> , ^ , v , ! , <->");
 	}
 	
 }

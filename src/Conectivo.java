@@ -9,7 +9,7 @@ public class Conectivo {
 	private static String c_andMac   = "ˆ";   // E
 	private static String c_and      = "^";
 	private static String c_biCond   = "<->"; // Bicondicional
-	private static String c_neg      = "˜";   // Negacao
+	private static String c_neg      = "!";   // Negacao
 	private static String[] conectivos = { p_aberto,p_fechado,c_cond,c_or,c_andMac,c_and,c_biCond,c_neg };
 	
 	private String simbulo;

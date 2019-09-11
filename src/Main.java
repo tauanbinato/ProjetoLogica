@@ -1,12 +1,13 @@
-import java.util.Scanner;
 
 public class Main {
 	
 	public static void main(String args[]) {
 		
 		Interface.userPedirProposicao();
-		Scanner input = User.insereInput();
-		//Calculadora.prepararProposicao("( p -> ( p ^ b ) v g )");
+		String input = User.insereInput();
+		input = input.trim().replaceAll("[^-><-]", " $0 ");
+		input = input.replaceFirst(" ", "");
+		Calculadora.prepararProposicao(input);
 		
 	}
 	
