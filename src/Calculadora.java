@@ -8,7 +8,14 @@ public class Calculadora {
 	private static ArrayList<String> conecArrayList = new ArrayList<String>();  
 	private static Integer valorVerdadeNum;
 	private static String userProp;
-
+	
+	public static void clear() {
+		propArrayList.clear();
+		varArrayList.clear();
+		conecArrayList.clear();
+		valorVerdadeNum = 0;
+	}
+	
 	public static void prepararProposicao(String prop) {
 
 		try {
@@ -33,8 +40,10 @@ public class Calculadora {
 					conecArrayList.add(c.getSimbulo());
 				}
 			}
-			//System.out.println(propArray);
+			
+			//Preparamos os valores verdades.
 			prepararValoresVerdades();
+
 		} catch(Exception e) {
 			System.out.println("ERRO AO PREPARAR PROPOSICAO -> " + e.getMessage());
 		}
@@ -74,7 +83,7 @@ public class Calculadora {
 			Interface.mostrarInfoProposicao(onlyDiffVars,conecArrayList,valorVerdadeNum);
 			Interface.spacer(userProp.length());
 		} catch (Exception e) {
-			System.out.println("ERRO AO INICIALIZAR VALORES VERDADE -> " + e.getMessage());
+			System.out.println("ERRO AO PREPARAR VALORES VERDADE -> " + e.getMessage());
 		}
 
 		inicializarValoresVerdadeVars();
@@ -137,13 +146,41 @@ public class Calculadora {
 			Interface.mostrarUserProp(userProp);
 			Interface.mostrarValoresVerdadeIniciais(propArrayList , valorVerdadeNum);
 			Interface.spacer(userProp.length());
-			
+
 		} catch (Exception e) {
 			System.out.println("ERRO AO INICIALIZAR VALORES VERDADE -> " + e.getMessage());
 		}
 		
 	}
-
+	
+	public static boolean checkBalanced(ArrayList<Object> prop) {
+		
+		try {
+			if(prop.size() <= 0) return false;
+		
+			ArrayList<String> parentesis = new ArrayList<String>();
+			int i = 0;
+			
+			for(Object obj : prop) {
+				if(obj instanceof Conectivo) {
+					if(((Conectivo) obj).getSimbulo().equals("(")) {
+						parentesis.add("(");
+						i++;
+					} 
+					else if(((Conectivo) obj).getSimbulo().equals(")")) {
+						parentesis.remove(i);
+					}
+				}
+			}
+			if(parentesis.size() == 0) return true;
+			return false;
+		}catch(Exception e) {
+			System.out.println("ERRO AO CHECAR BALANCEADO -> " + e.getMessage());
+			return false;
+		}
+	}
+	
+	// Funções auxiliares
 	private static boolean isThere(ArrayList<Variavel> onlyDiff , String str) {
 
 		for(Variavel var : onlyDiff) {
