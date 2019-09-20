@@ -32,8 +32,14 @@ public class Interface {
 		System.out.println("");
 	}
 	
-	public static void mostrarInfoProposicao(ArrayList<Variavel> onlyDiffVars,ArrayList<String> conecArrayList,Integer valorVerdadeNum) {
-		System.out.println("Número de variáveis: " + onlyDiffVars.size() + "| Numero de conectivos: " + conecArrayList.size() + "| Total valores verdade possíveis: " + valorVerdadeNum + "|");
+	public static void mostrarInfoProposicao(int numVariaveisDistintas,int i,int valorVerdadeNum) {
+		System.out.println("Número de variáveis: " + numVariaveisDistintas + "| Numero de conectivos: " + i + "| Total valores verdade possíveis: " + valorVerdadeNum + "|");
+	}
+	
+	public static void mostrarValoresVerdade(ArrayList<String> v) {
+		for(String str : v) {
+			System.out.print(str);
+		}
 	}
 	
 	public static void mostrarInfoVariavel(Variavel v) {
@@ -80,6 +86,14 @@ public class Interface {
 	public static void userPedirProposicao() {
 		System.out.println("Insira a proposição que deseja calcular.");
 		System.out.println("Conectivos: -> , ^ , v , ! , <->");
+	}
+	
+	public static void userPerguntarStart() {
+		System.out.println("Proposição pronta, deseja iniciar o calculo?");
+	}
+	
+	public static void erroBalanceamento() {
+		System.out.println("Sua fórmula não está balanceada, verifique se colocou os parenteses corretamente.");
 	}
 	
 }

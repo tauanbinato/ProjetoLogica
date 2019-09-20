@@ -5,16 +5,11 @@ public class Calculadora {
 
 	public  static ArrayList<Object> propArrayList  = new ArrayList<Object>();
 	private static ArrayList<String> varArrayList   = new ArrayList<String>();
-	private static ArrayList<String> conecArrayList = new ArrayList<String>();  
+	private static ArrayList<String> conecArrayList = new ArrayList<String>();
+	private static String[] ordem = {Conectivo.c_neg,Conectivo.c_and,Conectivo.c_or,Conectivo.c_cond,Conectivo.c_biCond};
 	private static Integer valorVerdadeNum;
+	private static Integer numVariaveisDistintas;
 	private static String userProp;
-	
-	public static void clear() {
-		propArrayList.clear();
-		varArrayList.clear();
-		conecArrayList.clear();
-		valorVerdadeNum = 0;
-	}
 	
 	public static void prepararProposicao(String prop) {
 
@@ -78,10 +73,9 @@ public class Calculadora {
 				}
 				i++;
 			}
-			Interface.spacer(userProp.length());
+			
 			valorVerdadeNum = (int) Math.pow(2, onlyDiffVars.size());
-			Interface.mostrarInfoProposicao(onlyDiffVars,conecArrayList,valorVerdadeNum);
-			Interface.spacer(userProp.length());
+			numVariaveisDistintas = onlyDiffVars.size();
 		} catch (Exception e) {
 			System.out.println("ERRO AO PREPARAR VALORES VERDADE -> " + e.getMessage());
 		}
@@ -111,7 +105,7 @@ public class Calculadora {
 						indexVarThere = 0;
 						numRepeat *= 2;
 						propArrayList.set(i, v);
-						System.out.println(((Variavel) propArrayList.get(i)).getLetra() + ": " + ((Variavel) propArrayList.get(i)).getValorVerdade());
+						//System.out.println(((Variavel) propArrayList.get(i)).getLetra() + ": " + ((Variavel) propArrayList.get(i)).getValorVerdade());
 					}
 					else {
 						//Se não tiver sido já calculada.
@@ -123,13 +117,13 @@ public class Calculadora {
 							varsCalculadas.add(v);
 							indexVarThere = varsCalculadas.lastIndexOf(v);
 							propArrayList.set(i, v);
-							System.out.println(((Variavel) propArrayList.get(i)).getLetra() + ": " + ((Variavel) propArrayList.get(i)).getValorVerdade());
+							//System.out.println(((Variavel) propArrayList.get(i)).getLetra() + ": " + ((Variavel) propArrayList.get(i)).getValorVerdade());
 							
 						} else {
 							// Se já foi calculado, utilize os próprios valores.
 							Variavel v = varsCalculadas.get(indexVarThere);
 							propArrayList.set(i, v);
-							System.out.println(((Variavel) propArrayList.get(i)).getLetra() + ": " + ((Variavel) propArrayList.get(i)).getValorVerdade());
+							//System.out.println(((Variavel) propArrayList.get(i)).getLetra() + ": " + ((Variavel) propArrayList.get(i)).getValorVerdade());
 						}
 					}
 					varI++;
@@ -142,15 +136,92 @@ public class Calculadora {
 				i++;
 			}
 
-			Interface.spacer(userProp.length());
-			Interface.mostrarUserProp(userProp);
-			Interface.mostrarValoresVerdadeIniciais(propArrayList , valorVerdadeNum);
-			Interface.spacer(userProp.length());
-
 		} catch (Exception e) {
 			System.out.println("ERRO AO INICIALIZAR VALORES VERDADE -> " + e.getMessage());
 		}
 		
+	}
+	
+	public static void calcularProposicao() {
+		
+		calcularConectivo((Variavel)propArrayList.get(0),(Conectivo)propArrayList.get(1),(Variavel)propArrayList.get(2));
+//		//Seguimos o calculo na ordem correta.
+//		for(int i = 0; i < ordem.length; i++) {
+//			for(Object obj : propArrayList) {
+//				if( obj instanceof Conectivo) {
+//					// Se for um conectivo da ordem na preposição, começe por ele.
+//					if(((Conectivo) obj).getSimbulo().equals(ordem[i]))  {
+//						
+//					}
+//				}
+//			}
+//		}
+	}
+	
+	private static ArrayList<String> calcularConectivo(Variavel v1  , Conectivo c , Variavel v2) {
+		
+		// Checks de segurança.
+		if(v1.getValorVerdade().size() <= 0 && v2.valorVerdade.size() <= 0) return null;
+		if(v1.getValorVerdade().size() != v2.getValorVerdade().size()) return null;
+		
+		ArrayList<String> result = new ArrayList<String>();
+	
+		System.out.println("Calculando: " + v1.getLetra() + " " + c.getSimbulo() + " " + v2.getLetra());
+		for(int i = 0; i < v1.getValorVerdade().size(); i++) {
+			String simbulo = c.getSimbulo();
+			
+			//Implicação ->
+			if (Conectivo.c_cond.equals(simbulo)) {
+				//Na implicação só é falso se v1 verdadeiro implicar em v2 falso.
+				if(v1.getValorVerdade().get(i).equals("v") && v2.getValorVerdade().get(i).equals("f")){
+					result.add("f");
+				}else {
+					result.add("v");
+				}	
+			}
+			//Disjunção v
+			else if (Conectivo.c_or.equals(simbulo)){
+				//Na disjunção só é falso quando os dois são falsos
+				if(v1.getValorVerdade().get(i).equals("f") && v2.getValorVerdade().get(i).equals("f")) {
+					result.add("f");
+				}else {
+					result.add("v");
+				}
+			}
+			//Conjunção ^
+			else if (Conectivo.c_and.equals(simbulo)){
+				//Na conjunção só é verdade quando os dois são verdades
+				if(!(v1.getValorVerdade().get(i).equals("v") && v2.getValorVerdade().get(i).equals("v"))) {
+					result.add("f");
+				}else {
+					result.add("v");
+				}
+			}
+			//Implicação dupla <->
+			else if (Conectivo.c_biCond.equals(simbulo)){
+				//Na bicondicional só é verdade quando v1 e v2 são iguais.
+				if(!((v1.getValorVerdade().get(i).equals("v") && v2.getValorVerdade().get(i).equals("v")) ||
+					(v1.getValorVerdade().get(i).equals("f") && v2.getValorVerdade().get(i).equals("f")))) {
+					result.add("f");
+				} else {
+					result.add("v");
+				}
+			}
+			else {
+				System.out.println("erro: condicional inexistente.");
+				return null;
+			}
+		}
+		Interface.mostrarValoresVerdade(result);
+		return result;
+	}
+	
+	public static void mostrarValores() {
+		Interface.mostrarInfoProposicao(numVariaveisDistintas,conecArrayList.size(),valorVerdadeNum);
+		Interface.spacer(userProp.length());
+		Interface.mostrarUserProp(userProp);
+		Interface.mostrarValoresVerdadeIniciais(propArrayList , valorVerdadeNum);
+		Interface.spacer(userProp.length());
 	}
 	
 	public static boolean checkBalanced(ArrayList<Object> prop) {
@@ -159,7 +230,7 @@ public class Calculadora {
 			if(prop.size() <= 0) return false;
 		
 			ArrayList<String> parentesis = new ArrayList<String>();
-			int i = 0;
+			int i = -1;
 			
 			for(Object obj : prop) {
 				if(obj instanceof Conectivo) {
@@ -173,6 +244,8 @@ public class Calculadora {
 				}
 			}
 			if(parentesis.size() == 0) return true;
+			
+			Interface.erroBalanceamento();
 			return false;
 		}catch(Exception e) {
 			System.out.println("ERRO AO CHECAR BALANCEADO -> " + e.getMessage());
@@ -189,6 +262,14 @@ public class Calculadora {
 			}
 		}
 		return false;
+	}
+	
+	public static void clear() {
+		propArrayList.clear();
+		varArrayList.clear();
+		conecArrayList.clear();
+		valorVerdadeNum = 0;
+		numVariaveisDistintas = 0;
 	}
 
 }
